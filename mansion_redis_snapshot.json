@@ -1,0 +1,188 @@
+{
+  "memory": {
+    "room_YSKW": {
+      "phase": "PLAYING",
+      "players": {
+        "bot_f5xgod7j7": {
+          "id": "bot_f5xgod7j7",
+          "sessionToken": "bot_token_0.5065189525811957",
+          "name": "Kurnaz Tilki",
+          "charIndex": 1,
+          "role": "DETECTIVE",
+          "x": 204,
+          "y": 335,
+          "color": "#FF4D4D",
+          "isEliminated": false,
+          "score": 130,
+          "tasksCompleted": 2,
+          "tagsMade": 0,
+          "trapsDodged": 0,
+          "correctVotes": 0,
+          "isConnected": true,
+          "disconnectedAt": null,
+          "isBot": true
+        },
+        "bot_2idh9xivk": {
+          "id": "bot_2idh9xivk",
+          "sessionToken": "bot_token_0.31349843242519904",
+          "name": "Minik Tavşan",
+          "charIndex": 5,
+          "role": "INNOCENT",
+          "x": 1036,
+          "y": 218,
+          "color": "#4DA6FF",
+          "isEliminated": false,
+          "score": 130,
+          "tasksCompleted": 2,
+          "tagsMade": 0,
+          "trapsDodged": 0,
+          "correctVotes": 0,
+          "isConnected": true,
+          "disconnectedAt": null,
+          "isBot": true
+        },
+        "bot_tb4qlsq7y": {
+          "id": "bot_tb4qlsq7y",
+          "sessionToken": "bot_token_0.7115542860015416",
+          "name": "Uykucu Ayı",
+          "charIndex": 0,
+          "role": "TAGGER",
+          "x": 412,
+          "y": 204,
+          "color": "#E1FF4D",
+          "isEliminated": false,
+          "score": 0,
+          "tasksCompleted": 0,
+          "tagsMade": 0,
+          "trapsDodged": 0,
+          "correctVotes": 0,
+          "isConnected": true,
+          "disconnectedAt": null,
+          "isBot": true
+        },
+        "CLj1SUqzNJuwIkmbAAAE": {
+          "id": "CLj1SUqzNJuwIkmbAAAE",
+          "sessionToken": "10fyvlw8wnib",
+          "name": "rtn",
+          "charIndex": 0,
+          "role": "INNOCENT",
+          "x": 950,
+          "y": 580,
+          "color": "#FF4D4D",
+          "isEliminated": false,
+          "score": 0,
+          "tasksCompleted": 0,
+          "tagsMade": 0,
+          "trapsDodged": 0,
+          "correctVotes": 0,
+          "isConnected": true,
+          "disconnectedAt": null
+        }
+      },
+      "tasks": [
+        {
+          "id": "task_clock_3",
+          "name": "Eski Tabloları Hizala",
+          "room": "Entrance Hall",
+          "x": 460,
+          "y": 440,
+          "progress": 0,
+          "type": "clock"
+        },
+        {
+          "id": "task_salad_3",
+          "name": "Gümüş Çatal Bıçaklar",
+          "room": "Kitchen",
+          "x": 1080,
+          "y": 260,
+          "progress": 0,
+          "type": "salad"
+        },
+        {
+          "id": "task_toys_1",
+          "name": "Oyuncakları Düzenle",
+          "room": "Playroom",
+          "x": 150,
+          "y": 650,
+          "progress": 0,
+          "type": "toybox"
+        },
+        {
+          "id": "task_polish_1",
+          "name": "Giriş Zilini Parlat",
+          "room": "Entrance Hall",
+          "x": 700,
+          "y": 460,
+          "progress": 0,
+          "type": "clock"
+        },
+        {
+          "id": "task_flowers_3",
+          "name": "Zararlı Otları Yol",
+          "room": "Garden",
+          "x": 1020,
+          "y": 745,
+          "progress": 0,
+          "type": "flowers"
+        },
+        {
+          "id": "task_wash_2",
+          "name": "Mutfak Tezgahını Sil",
+          "room": "Kitchen",
+          "x": 850,
+          "y": 250,
+          "progress": 100,
+          "type": "salad"
+        },
+        {
+          "id": "task_books_1",
+          "name": "Sayı Sıralama Rafı",
+          "room": "Library",
+          "x": 130,
+          "y": 150,
+          "progress": 100,
+          "type": "books"
+        },
+        {
+          "id": "task_salad_2",
+          "name": "Sebze Sepeti Hazırla",
+          "room": "Kitchen",
+          "x": 920,
+          "y": 110,
+          "progress": 100,
+          "type": "salad"
+        },
+        {
+          "id": "task_dust_1",
+          "name": "Tozlu Ansiklopediler",
+          "room": "Library",
+          "x": 300,
+          "y": 240,
+          "progress": 100,
+          "type": "books"
+        },
+        {
+          "id": "task_polish_2",
+          "name": "Lobi Paspası Yap",
+          "room": "Entrance Hall",
+          "x": 670,
+          "y": 350,
+          "progress": 0,
+          "type": "clock"
+        }
+      ],
+      "traps": [],
+      "tagSpots": [],
+      "meeting": null,
+      "taskProgress": 40,
+      "timer": 215,
+      "tagCooldown": 0,
+      "bellCooldown": 0,
+      "outcome": null,
+      "roomCode": "YSKW",
+      "maxPlayers": 4
+    }
+  },
+  "hashes": {},
+  "timestamp": 1781366446057
+}
