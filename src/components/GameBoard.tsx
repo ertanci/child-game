@@ -38,23 +38,23 @@ const PORTALS = [
 
 const FURNITURE = [
   // Library Spot Furniture
-  { id: 'lib_shelf_1', name: 'Kitaplık 1', x: 80, y: 50, w: 100, h: 32, emoji: '📚', color: '#1e1b4b', label: 'Eski Romanlar' },
-  { id: 'lib_shelf_2', name: 'Kitaplık 2', x: 260, y: 50, w: 100, h: 32, emoji: '📚', color: '#1a1835', label: 'Tarih Arşivi' },
-  { id: 'lib_table', name: 'Okuma Masası', x: 160, y: 160, w: 120, h: 60, emoji: '📖🕯️', color: '#451a03', label: 'Deri Harita' },
+  { id: 'lib_shelf_1', name: 'Kitaplık 1', x: 80, y: 50, w: 50, h: 16, emoji: '📚', color: '#1e1b4b', label: 'Eski Romanlar' },
+  { id: 'lib_shelf_2', name: 'Kitaplık 2', x: 260, y: 50, w: 50, h: 16, emoji: '📚', color: '#1a1835', label: 'Tarih Arşivi' },
+  { id: 'lib_table', name: 'Okuma Masası', x: 160, y: 160, w: 60, h: 30, emoji: '📖🕯️', color: '#451a03', label: 'Deri Harita' },
 
   // Kitchen Spot Furniture
-  { id: 'kit_counter_1', name: 'Tezgah 1', x: 790, y: 50, w: 120, h: 32, emoji: '🍳🍕', color: '#27272a', label: 'Fırın & Ocak' },
-  { id: 'kit_counter_2', name: 'Tezgah 2', x: 990, y: 50, w: 120, h: 32, emoji: '🍵🍓', color: '#27272a', label: 'Meyve Hazırlık' },
-  { id: 'kit_dining', name: 'Yemek Masası', x: 885, y: 160, w: 130, h: 60, emoji: '🍽️🧀🍷', color: '#78350f', label: 'Büyük Masa' },
+  { id: 'kit_counter_1', name: 'Tezgah 1', x: 790, y: 50, w: 60, h: 16, emoji: '🍳🍕', color: '#27272a', label: 'Fırın & Ocak' },
+  { id: 'kit_counter_2', name: 'Tezgah 2', x: 990, y: 50, w: 60, h: 16, emoji: '🍵🍓', color: '#27272a', label: 'Meyve Hazırlık' },
+  { id: 'kit_dining', name: 'Yemek Masası', x: 885, y: 160, w: 65, h: 30, emoji: '🍽️🧀🍷', color: '#78350f', label: 'Büyük Masa' },
 
   // Playroom Spot Furniture
-  { id: 'play_table', name: 'Bilardo Masası', x: 130, y: 540, w: 130, h: 65, emoji: '🎱🟢🏓', color: '#064e3b', label: 'Oyun Masası' },
-  { id: 'play_sofa', name: 'Kadife Koltuk', x: 70, y: 670, w: 90, h: 42, emoji: '🛋️', color: '#4c1d95', label: 'Sohbet Alanı' },
-  { id: 'play_trophy', name: 'Kupa Dolabı', x: 290, y: 670, w: 60, h: 42, emoji: '🏆🤖', color: '#172554', label: 'Ödüller' },
+  { id: 'play_table', name: 'Bilardo Masası', x: 130, y: 540, w: 65, h: 32, emoji: '🎱🟢🏓', color: '#064e3b', label: 'Oyun Masası' },
+  { id: 'play_sofa', name: 'Kadife Koltuk', x: 70, y: 670, w: 45, h: 21, emoji: '🛋️', color: '#4c1d95', label: 'Sohbet Alanı' },
+  { id: 'play_trophy', name: 'Kupa Dolabı', x: 290, y: 670, w: 30, h: 21, emoji: '🏆🤖', color: '#172554', label: 'Ödüller' },
 
   // Garden Sector Furniture
-  { id: 'gard_fountain', name: 'Mermer Havuz', x: 910, y: 640, w: 80, h: 80, emoji: '⛲💦🕊️', color: '#0f766e', label: 'Süslü Havuz' },
-  { id: 'gard_table', name: 'Piknik Masası', x: 870, y: 530, w: 140, h: 60, emoji: '🌻🍉🥛', color: '#5f123b', label: 'Bahçe Masası' }
+  { id: 'gard_fountain', name: 'Mermer Havuz', x: 910, y: 640, w: 40, h: 40, emoji: '⛲💦🕊️', color: '#0f766e', label: 'Süslü Havuz' },
+  { id: 'gard_table', name: 'Piknik Masası', x: 870, y: 530, w: 70, h: 30, emoji: '🌻🍉🥛', color: '#5f123b', label: 'Bahçe Masası' }
 ];
 
 function checkCollision(x: number, y: number, radius = 14) {
@@ -321,45 +321,30 @@ export default function GameBoard({
       }
 
       if (dx !== 0 || dy !== 0) {
-        if (localPlayer.isEliminated) {
-          // Spectral ghosts ignore walls completely!
-          setLocalX(prevX => {
-            let targetX = prevX + dx;
-            if (targetX < 30) targetX = 30;
-            if (targetX > 1170) targetX = 1170;
-            return targetX;
-          });
+        let nextX = localPosRef.current.x + dx;
+        if (nextX < 30) nextX = 30;
+        if (nextX > 1170) nextX = 1170;
 
-          setLocalY(prevY => {
-            let targetY = prevY + dy;
-            if (targetY < 30) targetY = 30;
-            if (targetY > 770) targetY = 770;
-            return targetY;
-          });
-        } else {
-          // Slide Collision: Check X path first, then Y path independently
-          setLocalX(prevX => {
-            let targetX = prevX + dx;
-            if (targetX < 30) targetX = 30;
-            if (targetX > 1170) targetX = 1170;
-            
-            if (checkCollision(targetX, localPosRef.current.y)) {
-              return prevX; // Don't move on X
-            }
-            return targetX;
-          });
+        let nextY = localPosRef.current.y + dy;
+        if (nextY < 30) nextY = 30;
+        if (nextY > 770) nextY = 770;
 
-          setLocalY(prevY => {
-            let targetY = prevY + dy;
-            if (targetY < 30) targetY = 30;
-            if (targetY > 770) targetY = 770;
-            
-            if (checkCollision(localPosRef.current.x, targetY)) {
-              return prevY; // Don't move on Y
+        if (!localPlayer.isEliminated) {
+          const isCurrentlyStuck = checkCollision(localPosRef.current.x, localPosRef.current.y);
+
+          if (!isCurrentlyStuck) {
+            if (checkCollision(nextX, localPosRef.current.y)) {
+              nextX = localPosRef.current.x; // Block X
             }
-            return targetY;
-          });
+            if (checkCollision(nextX, nextY)) {
+              nextY = localPosRef.current.y; // Block Y
+            }
+          }
         }
+
+        if (nextX !== localPosRef.current.x) setLocalX(nextX);
+        if (nextY !== localPosRef.current.y) setLocalY(nextY);
+        localPosRef.current = { x: nextX, y: nextY };
       }
     }, 25); // 40 Hz loop for smooth analog movement feeling
 
@@ -378,37 +363,29 @@ export default function GameBoard({
     if (dir === 'LEFT') dx = -speed;
     if (dir === 'RIGHT') dx = speed;
 
-    if (localPlayer.isEliminated) {
-      setLocalX(prevX => {
-        let nextX = prevX + dx;
-        if (nextX < 30) nextX = 30;
-        if (nextX > 1170) nextX = 1170;
-        return nextX;
-      });
+    let nextX = localPosRef.current.x + dx;
+    if (nextX < 30) nextX = 30;
+    if (nextX > 1170) nextX = 1170;
 
-      setLocalY(prevY => {
-        let nextY = prevY + dy;
-        if (nextY < 30) nextY = 30;
-        if (nextY > 770) nextY = 770;
-        return nextY;
-      });
-    } else {
-      setLocalX(prevX => {
-        let nextX = prevX + dx;
-        if (nextX < 30) nextX = 30;
-        if (nextX > 1170) nextX = 1170;
-        if (checkCollision(nextX, localPosRef.current.y)) return prevX;
-        return nextX;
-      });
+    let nextY = localPosRef.current.y + dy;
+    if (nextY < 30) nextY = 30;
+    if (nextY > 770) nextY = 770;
 
-      setLocalY(prevY => {
-        let nextY = prevY + dy;
-        if (nextY < 30) nextY = 30;
-        if (nextY > 770) nextY = 770;
-        if (checkCollision(localPosRef.current.x, nextY)) return prevY;
-        return nextY;
-      });
+    if (!localPlayer.isEliminated) {
+      const isCurrentlyStuck = checkCollision(localPosRef.current.x, localPosRef.current.y);
+      if (!isCurrentlyStuck) {
+        if (checkCollision(nextX, localPosRef.current.y)) {
+          nextX = localPosRef.current.x;
+        }
+        if (checkCollision(nextX, nextY)) {
+          nextY = localPosRef.current.y;
+        }
+      }
     }
+
+    if (nextX !== localPosRef.current.x) setLocalX(nextX);
+    if (nextY !== localPosRef.current.y) setLocalY(nextY);
+    localPosRef.current = { x: nextX, y: nextY };
   };
 
   // Sync positions to server at 16Hz (every 60ms) to conserve network traffic and avoid visual lag
@@ -538,8 +515,8 @@ export default function GameBoard({
       
       {/* Detective Guess Tagger Overlay/Modal */}
       {showGuessModal && (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="relative max-w-md w-full bg-slate-900 border-2 border-indigo-500 rounded-3xl p-6 text-center shadow-2xl shadow-indigo-500/30 overflow-hidden">
+        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
+          <div className="relative max-w-md w-full bg-slate-900 border-2 border-indigo-500 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center shadow-2xl shadow-indigo-500/30 max-h-[95vh] overflow-y-auto flex flex-col">
             
             {/* Ambient Background Accents */}
             <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full bg-indigo-500/10 blur-xl" />
@@ -640,8 +617,8 @@ export default function GameBoard({
 
       {/* Secret Role Announcement Overlay */}
       {showRoleOverlay && localPlayer && (
-        <div className="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="relative max-w-md w-full bg-slate-900 border-2 border-slate-700 rounded-3xl p-6 text-center shadow-2xl shadow-indigo-500/20 overflow-hidden transform scale-100 transition-all">
+        <div className="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
+          <div className="relative max-w-md w-full bg-slate-900 border-2 border-slate-700 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center shadow-2xl shadow-indigo-500/20 max-h-[95vh] overflow-y-auto transform scale-100 transition-all">
             
             {/* Glowing background circle */}
             <div className={`absolute -top-16 -left-16 w-32 h-32 rounded-full opacity-20 blur-xl ${
@@ -719,7 +696,7 @@ export default function GameBoard({
       )}
 
       {/* Top HUD Stats Panel */}
-      <div id="mansion_overlay_hud" className="w-full max-w-5xl bg-slate-950/80 border border-slate-800 rounded-xl sm:rounded-2xl p-2 sm:p-4 mb-2 flex items-center justify-between gap-2 z-10 backdrop-blur-sm">
+      <div id="mansion_overlay_hud" className="w-full max-w-5xl bg-slate-950/80 border border-slate-800 rounded-xl sm:rounded-2xl p-1.5 sm:p-2 flex items-center justify-between gap-2 z-10 backdrop-blur-sm transform scale-75 sm:scale-50 origin-top mb-[-12px] sm:mb-[-30px]">
         
         {/* Left Side: Role Badge & Connection indicator */}
         <div className="flex items-center gap-2 sm:gap-3">
@@ -809,15 +786,15 @@ export default function GameBoard({
       )}
 
       {/* Upper Control Strip */}
-      <div id="mansion_game_header" className="w-full max-w-5xl flex justify-between items-center gap-2 mb-2 z-10 select-none">
+      <div id="mansion_game_header" className="w-full max-w-5xl flex justify-between items-center gap-2 mb-1 z-10 select-none transform scale-75 sm:scale-50 origin-top relative mb-[-8px] sm:mb-[-12px]">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleToggleFullscreen}
-            className="px-3.5 py-2 bg-slate-800/85 hover:bg-slate-750 text-slate-200 border border-slate-700 hover:border-slate-500 rounded-xl text-xs font-bold transition active:scale-95 flex items-center gap-1.5 cursor-pointer shadow leading-none"
+            className="w-8 h-8 bg-slate-800/85 hover:bg-slate-750 text-slate-200 border border-slate-700 hover:border-slate-500 rounded-xl transition active:scale-95 flex items-center justify-center cursor-pointer shadow"
+            title={isFullscreen ? 'Pencereli' : 'Tam Ekran'}
           >
             {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
-            {isFullscreen ? 'Pencereli' : 'Tam Ekran'}
           </button>
           
           {isPortrait && (
@@ -830,14 +807,15 @@ export default function GameBoard({
         <button
           type="button"
           onClick={onLeaveRoom}
-          className="px-3.5 py-2 bg-red-950/80 hover:bg-red-900/95 text-red-200 border border-red-500/35 rounded-xl text-xs font-black transition active:scale-95 flex items-center gap-1 cursor-pointer shadow leading-none"
+          className="w-8 h-8 bg-red-950/80 hover:bg-red-900/95 border border-red-500/35 rounded-xl transition active:scale-95 flex items-center justify-center cursor-pointer shadow text-[12px]"
+          title="Odadan Çık"
         >
-          🚪 Odadan Çık
+          🚪
         </button>
       </div>
 
       {/* Main scrolling Camera Viewport Frame */}
-      <div id="mansion_viewport" className="w-[100%] max-w-5xl h-[56vh] border-4 border-slate-800 bg-slate-950 rounded-3xl relative overflow-hidden shadow-inner">
+      <div id="mansion_viewport" className="w-[100%] max-w-5xl h-[75vh] border-4 border-slate-800 bg-slate-950 rounded-3xl relative overflow-hidden shadow-inner">
         
         {/* Floating Tasks Tracker Panel (Left side) */}
         <div className={`absolute left-4 top-4 z-40 max-w-[210px] w-[50%] xs:w-auto bg-slate-950/90 border border-slate-800 rounded-2xl p-2.5 sm:p-3 shadow-lg shadow-black/80 backdrop-blur-md select-none pointer-events-auto transition-all duration-300 ${
@@ -848,7 +826,7 @@ export default function GameBoard({
             onClick={() => setIsTasksPanelCollapsed(!isTasksPanelCollapsed)}
           >
             <div className="flex items-center gap-1">
-              <span>📋</span> GÖREVLERİMİZ ({state.tasks.filter(t => t.progress >= 100).length}/10)
+              <span>📋</span> GÖREVLERİMİZ ({state.tasks.filter(t => t.progress >= 100).length}/{state.tasks.length})
             </div>
             <button 
               type="button" 
@@ -1193,20 +1171,20 @@ export default function GameBoard({
           {!localPlayer?.isEliminated && (localPlayer?.role === 'TAGGER' || localPlayer?.role === 'DETECTIVE') && PORTALS.map((portal) => (
             <div 
               key={portal.id}
-              className="absolute w-12 h-12 -ml-6 -mt-6 z-15 flex flex-col items-center justify-center animate-pulse"
+              className="absolute w-6 h-6 -ml-3 -mt-3 z-15 flex flex-col items-center justify-center animate-pulse"
               style={{ left: portal.x, top: portal.y }}
               title={portal.name}
             >
               <div className="absolute inset-0 rounded-full border border-dashed border-indigo-400 animate-spin opacity-50" style={{ animationDuration: '8s' }} />
-              <div className="absolute inset-1.5 rounded-full bg-violet-600/30 border border-violet-400 animate-ping opacity-25" />
+              <div className="absolute inset-1 rounded-full bg-violet-600/30 border border-violet-400 animate-ping opacity-25" />
               
-              <div className="w-8 h-8 rounded-full bg-indigo-900/90 border border-indigo-300 flex items-center justify-center text-base shadow-lg shadow-indigo-500/35 relative">
+              <div className="w-4 h-4 rounded-full bg-indigo-900/90 border border-indigo-300 flex items-center justify-center text-[10px] shadow-lg shadow-indigo-500/35 relative">
                 <span className="relative z-10">🌀</span>
                 <span className="absolute inset-0 rounded-full bg-indigo-500/20 blur-xs" />
               </div>
 
               {/* Little info label */}
-              <div className="absolute -bottom-5.5 bg-indigo-950/90 border border-indigo-400/40 rounded px-1.5 py-0.5 text-[8px] text-indigo-300 font-mono font-black tracking-wide uppercase shadow whitespace-nowrap">
+              <div className="absolute -bottom-4 bg-indigo-950/90 border border-indigo-400/40 rounded px-1 py-[1px] text-[6px] text-indigo-300 font-mono font-black tracking-wide uppercase shadow whitespace-nowrap">
                 {portal.name}
               </div>
             </div>
@@ -1233,7 +1211,7 @@ export default function GameBoard({
           {state.tasks.map((task) => (
             <div 
               key={task.id}
-              className="absolute w-12 h-12 -ml-6 -mt-6 z-15 flex flex-col items-center justify-center cursor-pointer"
+              className="absolute w-9 h-9 -ml-[18px] -mt-[18px] z-15 flex flex-col items-center justify-center cursor-pointer"
               style={{ left: task.x, top: task.y }}
             >
               {/* Radius feedback ring */}
@@ -1243,7 +1221,7 @@ export default function GameBoard({
                   : 'border-amber-400/60'
               }`} />
               
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-lg transition transform hover:scale-110 ${
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[14px] font-bold shadow-lg transition transform hover:scale-110 ${
                 task.progress >= 100 
                   ? 'bg-emerald-600 border border-emerald-400 text-white' 
                   : 'bg-amber-400 text-slate-900 border border-amber-200 animate-pulse'
@@ -1252,7 +1230,7 @@ export default function GameBoard({
               </div>
 
               {/* Little info badge */}
-              <div className="absolute -bottom-6 bg-slate-950/90 border border-slate-700 rounded px-1.5 py-0.5 text-[9px] text-white whitespace-nowrap font-semibold shadow">
+              <div className="absolute -bottom-6 bg-slate-950/90 border border-slate-700 rounded px-1.5 py-[2px] text-[9px] text-white whitespace-nowrap font-semibold shadow">
                 {task.name} ({task.progress}%)
               </div>
             </div>
@@ -1262,12 +1240,12 @@ export default function GameBoard({
           {(state.tagSpots || []).map((spot) => (
             <div 
               key={`tag_spot_${spot.id}`}
-              className="absolute w-12 h-12 -ml-6 -mt-6 rounded-full bg-red-950/25 border-2 border-red-500 border-dashed flex items-center justify-center z-12 animate-pulse"
+              className="absolute w-6 h-6 -ml-3 -mt-3 rounded-full bg-red-950/25 border-2 border-red-500 border-dashed flex items-center justify-center z-12 animate-pulse"
               style={{ left: spot.x, top: spot.y }}
             >
-              <span className="text-xl">🚨</span>
+              <span className="text-[10px]">🚨</span>
               <div 
-                className="absolute -bottom-5 bg-slate-950 border rounded px-1.5 py-0.5 text-[8.5px] uppercase font-mono font-bold tracking-wide shadow"
+                className="absolute -bottom-4 bg-slate-950 border rounded px-1 py-[1px] text-[6.5px] uppercase font-mono font-bold tracking-wide shadow"
                 style={{ borderColor: spot.color, color: spot.color }}
               >
                 {spot.playerName} İZİ
@@ -1294,7 +1272,7 @@ export default function GameBoard({
               <div 
                 key={player.id}
                 id={`player_char_${player.id}`}
-                className="absolute w-12 h-12 -ml-6 -mt-6 flex flex-col items-center justify-center transition-all duration-75 z-20"
+                className="absolute w-9 h-9 -ml-[18px] -mt-[18px] flex flex-col items-center justify-center transition-all duration-75 z-20"
                 style={{ 
                   left: currentX, 
                   top: currentY,
@@ -1302,20 +1280,20 @@ export default function GameBoard({
                 }}
               >
                 {/* Name Label */}
-                <div className="absolute -top-6 bg-slate-950/80 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-white whitespace-nowrap font-bold flex items-center gap-1">
+                <div className="absolute -top-6 bg-slate-950/80 border border-slate-800 rounded px-1.5 py-[1px] text-[9px] text-white whitespace-nowrap font-bold flex items-center gap-1">
                   <span 
                     className="w-1.5 h-1.5 rounded-full inline-block" 
                     style={{ backgroundColor: player.color }} 
                   />
                   {player.isBot ? `🤖 ${player.name}` : player.name}
-                  {!player.isBot && !player.isConnected && <span className="text-[8px] text-red-500 font-mono">(Zzz)</span>}
+                  {!player.isBot && !player.isConnected && <span className="text-[9px] text-red-500 font-mono">(Zzz)</span>}
                 </div>
 
                 {/* Core avatar skin */}
                 <div 
-                  className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xl font-bold shadow-md relative border-b-4 transition transform active:scale-95 ${
+                  className={`w-7 h-7 rounded flex items-center justify-center text-[14px] font-bold shadow-md relative border-b transition transform active:scale-95 ${
                     isSelf 
-                      ? 'ring-4 ring-indigo-400 border-indigo-700 animate-pulse' 
+                      ? 'ring-2 ring-indigo-400 border-indigo-700 animate-pulse' 
                       : 'border-slate-800'
                   }`}
                   style={{ 
@@ -1327,7 +1305,7 @@ export default function GameBoard({
 
                   {/* Character crown if owner */}
                   {state.players[Object.keys(state.players)[0]]?.id === player.id && (
-                    <span className="absolute -top-3.5 right-0.5 text-xs">👑</span>
+                    <span className="absolute -top-4 right-0 text-[14px]">👑</span>
                   )}
                 </div>
 

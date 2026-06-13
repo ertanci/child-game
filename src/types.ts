@@ -29,7 +29,7 @@ export interface Task {
   x: number;
   y: number;
   progress: number; // 0 to 100
-  type: 'books' | 'salad' | 'clock' | 'flowers' | 'toybox';
+  type: 'english_tf' | 'english_vocab' | 'english_translate';
 }
 
 export interface ConfettiTrap {

@@ -8,9 +8,10 @@ interface MansionMeetingProps {
   localPlayerId: string;
   onVote: (vote: string) => void;
   onSendChat: (text: string) => void;
+  onProceed: () => void;
 }
 
-export default function MansionMeeting({ meeting, players, localPlayerId, onVote, onSendChat }: MansionMeetingProps) {
+export default function MansionMeeting({ meeting, players, localPlayerId, onVote, onSendChat, onProceed }: MansionMeetingProps) {
   const [typedMsg, setTypedMsg] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
   const localPlayer = players[localPlayerId];
@@ -53,11 +54,11 @@ export default function MansionMeeting({ meeting, players, localPlayerId, onVote
   }
 
   return (
-    <div id="mansion_meeting_overlay" className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-40 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-slate-900 border-4 border-purple-500 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-[90vh] md:h-[75vh]">
+    <div id="mansion_meeting_overlay" className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-40 flex items-center justify-center p-2 sm:p-4">
+      <div className="w-full max-w-4xl bg-slate-900 border-2 sm:border-4 border-purple-500 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-[96vh] md:h-[80vh]">
         
         {/* Left Side: Players List & Voting */}
-        <div className="flex-1 p-6 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col justify-between">
+        <div className="flex-1 p-3 sm:p-6 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col overflow-y-auto">
           <div>
             {/* Header */}
             <div className="flex justify-between items-start mb-4">
@@ -169,17 +170,27 @@ export default function MansionMeeting({ meeting, players, localPlayerId, onVote
               <Vote size={16} /> Cast Your Deduction Vote
             </h4>
 
-            {isGhost ? (
+            {meeting.isConcluded ? (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-amber-300 font-bold bg-slate-900 p-3 rounded-xl text-center">
+                  Oylama Sonuçlandı! Bot olmayan bir oyuncu devam ettirebilir.
+                </p>
+                {!localPlayer?.isBot && (
+                  <button
+                    onClick={onProceed}
+                    className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold tracking-wider uppercase transition shadow-lg active:scale-95"
+                  >
+                    Oyuna Devam Et ➡️
+                  </button>
+                )}
+              </div>
+            ) : isGhost ? (
               <p className="text-xs text-slate-500 italic bg-slate-900 p-3 rounded-xl">
                 As a friendly ghost, you can float and complete tasks but you cannot vote in discussions. Watch your friends deduce! 😊
               </p>
             ) : hasVoted ? (
               <p className="text-xs text-emerald-400 font-semibold bg-emerald-950/20 border border-emerald-900/50 p-3 rounded-xl flex items-center gap-2">
                 <CheckCircle size={14} /> You have successfully submitted your vote! Wait for others to finish.
-              </p>
-            ) : meeting.isConcluded ? (
-              <p className="text-xs text-slate-400 italic bg-slate-900 p-3 rounded-xl">
-                The voting phase is over! Calculating results...
               </p>
             ) : (
               <div className="flex flex-col gap-2">
@@ -217,16 +228,16 @@ export default function MansionMeeting({ meeting, players, localPlayerId, onVote
         </div>
 
         {/* Right Side: Chat System */}
-        <div className="md:w-[420px] bg-slate-950 flex flex-col h-1/2 md:h-full">
+        <div className="md:w-[420px] bg-slate-950 flex flex-col h-[40%] md:h-full">
           {/* Section Header */}
-          <div className="p-4 border-b border-slate-800 flex items-center gap-2 bg-slate-900">
+          <div className="p-2 sm:p-4 border-b border-slate-800 flex items-center gap-2 bg-slate-900 hidden md:flex">
             <MessageSquare size={18} className="text-purple-400" />
             <h3 className="font-bold text-white text-sm">Kid-Safe Live Chat</h3>
           </div>
 
           {/* Quick Preset Buttons */}
-          <div className="p-3 border-b border-slate-800 bg-slate-950 max-h-40 overflow-y-auto">
-            <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-2">Quick Express Chat</div>
+          <div className="p-2 sm:p-3 border-b border-slate-800 bg-slate-950 max-h-32 sm:max-h-40 overflow-y-auto">
+            <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 sm:mb-2">Quick Express Chat</div>
             <div className="flex flex-wrap gap-1.5">
               {CHAT_PRESETS.map((preset, idx) => (
                 <button

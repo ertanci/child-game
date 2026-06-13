@@ -28,8 +28,51 @@ export default function App() {
   const [sessionToken, setSessionToken] = useState<string>('');
   const [leaderboard, setLeaderboard] = useState<LeaderboardRecord[]>([]);
 
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   // Sound system controls
   const [isMuted, setIsMuted] = useState(getSoundMuted());
+  const [hasInteracted, setHasInteracted] = useState(false);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.2; // soft background music
+      if (hasInteracted && !isMuted) {
+        audioRef.current.play().catch(e => console.warn('Audio play failed', e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [hasInteracted, isMuted]);
+
+  useEffect(() => {
+    const handleInteraction = () => {
+      setHasInteracted(true);
+      if (audioRef.current && !isMuted) {
+        audioRef.current.volume = 0.2;
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            window.removeEventListener('click', handleInteraction);
+            window.removeEventListener('keydown', handleInteraction);
+            window.removeEventListener('touchstart', handleInteraction);
+          }).catch(e => console.warn('Audio play failed', e));
+        }
+      } else if (isMuted) {
+        window.removeEventListener('click', handleInteraction);
+        window.removeEventListener('keydown', handleInteraction);
+        window.removeEventListener('touchstart', handleInteraction);
+      }
+    };
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('keydown', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
+    return () => {
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+    };
+  }, [isMuted]);
 
   // Lobby setup states
   const [joinName, setJoinName] = useState(() => localStorage.getItem('mansion_player_name') || '');
@@ -97,6 +140,9 @@ export default function App() {
       // If client is in player roster, mark as joined
       if (socket.id && updatedState.players[socket.id]) {
         setIsJoined(true);
+        if (updatedState.players[socket.id].isEliminated || updatedState.phase !== 'PLAYING') {
+          setActiveTask(null);
+        }
       }
     });
 
@@ -256,6 +302,12 @@ export default function App() {
     }
   };
 
+  const handleProceedMeeting = () => {
+    if (socketRef.current) {
+      socketRef.current.emit('proceedMeeting');
+    }
+  };
+
   // Minigame single task progress update
   const handleTaskProgressIncrement = (taskId: string, increment: number) => {
     if (socketRef.current) {
@@ -326,19 +378,26 @@ export default function App() {
   return (
     <div id="mansion_app_wrapper" className="min-h-screen bg-slate-950 font-sans text-slate-100 flex flex-col relative">
       
+      {/* Background Music */}
+      <audio 
+        ref={audioRef}
+        src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Apprehension.mp3" 
+        loop
+        preload="auto"
+      />
+
       {/* Floating Controls Bar */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+      <div className="fixed top-2 right-2 z-50 flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
         {/* Force Reset to Lobby */}
         {isJoined && gameState && (
           <button
             id="mansion_force_reset_btn"
             type="button"
             onClick={handleForceResetToLobby}
-            className="bg-red-600 hover:bg-red-500 border border-red-500 text-white p-2 px-3.5 rounded-full transition cursor-pointer select-none flex items-center gap-1.5 text-xs font-bold shadow-xl"
-            title="Sıfırla ve Lobiye Dön"
+            className="w-8 h-8 bg-red-600 hover:bg-red-500 border border-red-500 text-white rounded-full transition cursor-pointer select-none flex items-center justify-center shadow"
+            title="Oyunu Yeniden Başlat"
           >
-            <RefreshCw size={14} className="animate-pulse" />
-            <span>Oyunu Yeniden Başlat</span>
+            <RefreshCw size={14} />
           </button>
         )}
 
@@ -351,19 +410,13 @@ export default function App() {
             setIsMuted(nextMuted);
             setSoundMuted(nextMuted);
           }}
-          className="bg-slate-900/90 hover:bg-slate-800 border-2 border-slate-800 hover:border-slate-700/60 p-2 px-3.5 rounded-full text-slate-300 hover:text-white transition cursor-pointer select-none flex items-center gap-2 text-xs font-bold backdrop-blur-md shadow-xl"
+          className="w-8 h-8 bg-slate-900/90 hover:bg-slate-800 border-2 border-slate-800 hover:border-slate-700/60 rounded-full text-slate-300 hover:text-white transition cursor-pointer select-none flex items-center justify-center backdrop-blur-md shadow"
           title={isMuted ? "Sesi Aç" : "Sesi Kapat"}
         >
           {isMuted ? (
-            <>
-              <VolumeX size={15} className="text-rose-400" />
-              <span className="text-rose-400 font-bold">Muted</span>
-            </>
+            <VolumeX size={14} className="text-rose-400" />
           ) : (
-            <>
-              <Volume2 size={15} className="text-emerald-400 animate-pulse" />
-              <span className="text-emerald-400 font-bold">Audio On</span>
-            </>
+            <Volume2 size={14} className="text-emerald-400" />
           )}
         </button>
       </div>
@@ -385,7 +438,7 @@ export default function App() {
       {/* PHASE 1: Lobby Access Setup (Create & Join) */}
       {!isJoined && (
         <div id="entrance_lobby_form" className="flex-1 flex flex-col items-center justify-center p-4">
-          <div className="w-full max-w-md bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl relative">
+          <div className="w-full max-w-md bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl relative max-h-[95vh] overflow-y-auto">
             
             {/* Visual Logo */}
             <div className="text-center mb-6">
@@ -522,7 +575,7 @@ export default function App() {
           {/* LOBBY PHASE */}
           {gameState.phase === 'LOBBY' && (
             <div id="lobby_waiting_room" className="flex-1 flex flex-col items-center justify-center p-4">
-              <div className="w-full max-w-xl bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl">
+              <div className="w-full max-w-xl bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl max-h-[95vh] overflow-y-auto">
                 
                 {/* Header */}
                 <div className="flex justify-between items-center border-b border-slate-800 pb-4 mb-5">
@@ -709,6 +762,7 @@ export default function App() {
               localPlayerId={playerId}
               onVote={handleVotingSubmission}
               onSendChat={handleSendChatMessageText}
+              onProceed={handleProceedMeeting}
             />
           )}
 

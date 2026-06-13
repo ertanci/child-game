@@ -34,40 +34,41 @@ async function startServer() {
 
   // Pool of 25 distinct tasks suitable for children (distributed across the 5 mansion zones)
   const ALL_TASKS_POOL: Task[] = [
-    { id: 'task_books_1', name: 'Sayı Sıralama Rafı', room: 'Library', x: 130, y: 150, progress: 0, type: 'books' },
-    { id: 'task_dust_1', name: 'Tozlu Ansiklopediler', room: 'Library', x: 300, y: 240, progress: 0, type: 'books' },
-    { id: 'task_books_2', name: 'Hafıza Kartı Sıralama', room: 'Library', x: 350, y: 110, progress: 0, type: 'books' },
-    { id: 'task_dust_2', name: 'Gizemli Kitap Sayıları', room: 'Library', x: 140, y: 250, progress: 0, type: 'books' },
-    { id: 'task_books_3', name: 'Eski Kitap Koruyucu', room: 'Library', x: 250, y: 80, progress: 0, type: 'books' },
+    { id: 'task_books_1', name: 'İngilizce Doğru/Yanlış 1', room: 'Library', x: 130, y: 150, progress: 0, type: 'english_tf' },
+    { id: 'task_dust_1', name: 'Kelime Bilgisi 1', room: 'Library', x: 300, y: 240, progress: 0, type: 'english_vocab' },
+    { id: 'task_books_2', name: 'Cümle Çevirisi 1', room: 'Library', x: 350, y: 110, progress: 0, type: 'english_translate' },
+    { id: 'task_dust_2', name: 'İngilizce Doğru/Yanlış 2', room: 'Library', x: 140, y: 250, progress: 0, type: 'english_tf' },
+    { id: 'task_books_3', name: 'Kelime Bilgisi 2', room: 'Library', x: 250, y: 80, progress: 0, type: 'english_vocab' },
 
-    { id: 'task_salad_1', name: 'Meyve Salatası Yap', room: 'Kitchen', x: 800, y: 140, progress: 0, type: 'salad' },
-    { id: 'task_wash_1', name: 'Cam Tabakları Yıka', room: 'Kitchen', x: 1040, y: 180, progress: 0, type: 'salad' },
-    { id: 'task_salad_2', name: 'Sebze Sepeti Hazırla', room: 'Kitchen', x: 920, y: 110, progress: 0, type: 'salad' },
-    { id: 'task_wash_2', name: 'Mutfak Tezgahını Sil', room: 'Kitchen', x: 850, y: 250, progress: 0, type: 'salad' },
-    { id: 'task_salad_3', name: 'Gümüş Çatal Bıçaklar', room: 'Kitchen', x: 1080, y: 260, progress: 0, type: 'salad' },
+    { id: 'task_salad_1', name: 'Zamanlar Sınavı 1', room: 'Kitchen', x: 800, y: 140, progress: 0, type: 'english_translate' },
+    { id: 'task_wash_1', name: 'İngilizce Doğru/Yanlış 3', room: 'Kitchen', x: 1040, y: 180, progress: 0, type: 'english_tf' },
+    { id: 'task_salad_2', name: 'Kelime Bilgisi 3', room: 'Kitchen', x: 920, y: 110, progress: 0, type: 'english_vocab' },
+    { id: 'task_wash_2', name: 'A2 English Test', room: 'Kitchen', x: 850, y: 250, progress: 0, type: 'english_tf' },
+    { id: 'task_salad_3', name: 'Cümle Çevirisi 2', room: 'Kitchen', x: 1080, y: 260, progress: 0, type: 'english_translate' },
 
-    { id: 'task_clock_1', name: 'Büyük Saati Kur', room: 'Entrance Hall', x: 480, y: 360, progress: 0, type: 'clock' },
-    { id: 'task_polish_1', name: 'Giriş Zilini Parlat', room: 'Entrance Hall', x: 700, y: 460, progress: 0, type: 'clock' },
-    { id: 'task_clock_2', name: 'Konağın Giriş Saati', room: 'Entrance Hall', x: 580, y: 420, progress: 0, type: 'clock' },
-    { id: 'task_polish_2', name: 'Lobi Paspası Yap', room: 'Entrance Hall', x: 670, y: 350, progress: 0, type: 'clock' },
-    { id: 'task_clock_3', name: 'Eski Tabloları Hizala', room: 'Entrance Hall', x: 460, y: 440, progress: 0, type: 'clock' },
+    { id: 'task_clock_1', name: 'Kelime Eşleştirme 1', room: 'Entrance Hall', x: 480, y: 360, progress: 0, type: 'english_vocab' },
+    { id: 'task_polish_1', name: 'İngilizce Doğru/Yanlış 4', room: 'Entrance Hall', x: 700, y: 460, progress: 0, type: 'english_tf' },
+    { id: 'task_clock_2', name: 'Cümle Çevirisi 3', room: 'Entrance Hall', x: 580, y: 420, progress: 0, type: 'english_translate' },
+    { id: 'task_polish_2', name: 'Kelime Bilgisi 4', room: 'Entrance Hall', x: 670, y: 350, progress: 0, type: 'english_vocab' },
+    { id: 'task_clock_3', name: 'A2 Grammar Check', room: 'Entrance Hall', x: 460, y: 440, progress: 0, type: 'english_translate' },
 
-    { id: 'task_flowers_1', name: 'Kırmızı Gülleri Sula', room: 'Garden', x: 800, y: 680, progress: 0, type: 'flowers' },
-    { id: 'task_rake_1', name: 'Dökülen Yaprakları Topla', room: 'Garden', x: 1050, y: 640, progress: 0, type: 'flowers' },
-    { id: 'task_flowers_2', name: 'Çiçek Saksılarını Taşı', room: 'Garden', x: 920, y: 550, progress: 0, type: 'flowers' },
-    { id: 'task_rake_2', name: 'Bahçe Çimlerini Düzenle', room: 'Garden', x: 830, y: 720, progress: 0, type: 'flowers' },
-    { id: 'task_flowers_3', name: 'Zararlı Otları Yol', room: 'Garden', x: 1020, y: 745, progress: 0, type: 'flowers' },
+    { id: 'task_flowers_1', name: 'İngilizce Doğru/Yanlış 5', room: 'Garden', x: 800, y: 680, progress: 0, type: 'english_tf' },
+    { id: 'task_rake_1', name: 'Kelime Bilgisi 5', room: 'Garden', x: 1050, y: 640, progress: 0, type: 'english_vocab' },
+    { id: 'task_flowers_2', name: 'Cümle Çevirisi 4', room: 'Garden', x: 920, y: 550, progress: 0, type: 'english_translate' },
+    { id: 'task_rake_2', name: 'Zıt Anlamlılar 1', room: 'Garden', x: 830, y: 720, progress: 0, type: 'english_vocab' },
+    { id: 'task_flowers_3', name: 'A2 Vocabulary Check', room: 'Garden', x: 1020, y: 745, progress: 0, type: 'english_tf' },
 
-    { id: 'task_toys_1', name: 'Oyuncakları Düzenle', room: 'Playroom', x: 150, y: 650, progress: 0, type: 'toybox' },
-    { id: 'task_blocks_1', name: 'Renkli Blokları Diz', room: 'Playroom', x: 320, y: 690, progress: 0, type: 'toybox' },
-    { id: 'task_toys_2', name: 'Lego Setini Tamamla', room: 'Playroom', x: 220, y: 540, progress: 0, type: 'toybox' },
-    { id: 'task_blocks_2', name: 'Yapboz Parçalarını Eşle', room: 'Playroom', x: 120, y: 720, progress: 0, type: 'toybox' },
-    { id: 'task_toys_3', name: 'Oyun Masasını Topla', room: 'Playroom', x: 300, y: 740, progress: 0, type: 'toybox' },
+    { id: 'task_toys_1', name: 'İngilizce Doğru/Yanlış 6', room: 'Playroom', x: 150, y: 650, progress: 0, type: 'english_tf' },
+    { id: 'task_blocks_1', name: 'Cümle Çevirisi 5', room: 'Playroom', x: 320, y: 690, progress: 0, type: 'english_translate' },
+    { id: 'task_toys_2', name: 'Kelime Bilgisi 6', room: 'Playroom', x: 220, y: 540, progress: 0, type: 'english_vocab' },
+    { id: 'task_blocks_2', name: 'Zıt Anlamlılar 2', room: 'Playroom', x: 120, y: 720, progress: 0, type: 'english_vocab' },
+    { id: 'task_toys_3', name: 'Grammar Quiz', room: 'Playroom', x: 300, y: 740, progress: 0, type: 'english_tf' },
   ];
 
-  function get10RandomTasks(): Task[] {
+  function getRandomTasks(playerCount: number): Task[] {
+    const targetCount = Math.min(ALL_TASKS_POOL.length, Math.max(10, playerCount + 10));
     const shuffled = [...ALL_TASKS_POOL].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 10).map(t => ({ ...t }));
+    return shuffled.slice(0, targetCount).map(t => ({ ...t }));
   }
 
   // Hard wall collision geometries
@@ -200,6 +201,21 @@ async function startServer() {
   const socketToRoom = new Map<string, string>();
   // Keep a map of socket.id -> sessionToken
   const socketToSession = new Map<string, string>();
+
+  // Tracks if a room needs state broadcast due to movement
+  const roomNeedsSync = new Set<string>();
+
+  // Fast loop for syncing real-time positions (~10Hz)
+  setInterval(() => {
+    for (const roomCode of roomNeedsSync) {
+      const state = rooms[roomCode];
+      if (state) {
+        saveRoomState(roomCode, state);
+        io.to(roomCode).emit('stateUpdate', state);
+      }
+    }
+    roomNeedsSync.clear();
+  }, 100);
 
   // Periodically ticks down match time or handles meetings in rooms
   let matchInterval: NodeJS.Timeout | null = null;
@@ -334,6 +350,31 @@ async function startServer() {
     }
   }
 
+  function checkWinCondition(roomCode: string) {
+    const code = roomCode.toUpperCase();
+    const state = rooms[code];
+    if (!state || state.phase === 'GAMEOVER') return false;
+
+    const aliveInnocents = Object.values(state.players).filter(
+      p => p.role !== 'TAGGER' && !p.isEliminated
+    );
+    const aliveTaggers = Object.values(state.players).filter(
+      p => p.role === 'TAGGER' && !p.isEliminated
+    );
+
+    if (aliveTaggers.length === 0) {
+      endRoomGame(code, 'DETECTIVES_WIN_VOTE');
+      return true;
+    }
+
+    if (aliveInnocents.length <= aliveTaggers.length) {
+      endRoomGame(code, 'TAGGER_WIN_ELIMINATIONS');
+      return true;
+    }
+    
+    return false;
+  }
+
   function endRoomGame(roomCode: string, outcome: GameState['outcome']) {
     const code = roomCode.toUpperCase();
     const state = rooms[code];
@@ -384,7 +425,7 @@ async function startServer() {
         reportedPlayerId: tSpot.id,
         votes: {},
         votedOutPlayerId: null,
-        timer: 35,
+        timer: 15,
         isConcluded: false,
         chatMessages: [],
       };
@@ -403,6 +444,8 @@ async function startServer() {
     }
     
     for (const bot of bots) {
+      if (bot.isEliminated) continue;
+
       // Check if there is a tagSpot nearby to report
       if (state.tagSpots && state.tagSpots.length > 0) {
         let reportedBody = false;
@@ -540,13 +583,8 @@ async function startServer() {
             addRoomSystemMessage(code, `📢 EBE BİRİNİ SOBELEDİ! Sinsi ebe (${bot.name}), ${targetDet.name} arkadaşımızı sobeledi! Ebe dinlenmeye çekildi, 40 saniye boyunca kimseyi sobeleyemez!`);
             stateChanged = true;
             
-            const remainingDet = Object.values(state.players).filter(
-              p => p.role !== 'TAGGER' && !p.isEliminated
-            );
-            if (remainingDet.length === 0) {
-              endRoomGame(code, 'TAGGER_WIN_ELIMINATIONS');
-              return;
-            }
+            const gameEnded = checkWinCondition(code);
+            if (gameEnded) return;
           }
         }
 
@@ -660,85 +698,68 @@ async function startServer() {
 
     const votes = state.meeting.votes;
     const voteCounts: Record<string, number> = {};
+    let skippedOrNoneCount = 0;
 
     for (const votedFor of Object.values(votes)) {
-      if (votedFor !== 'skip' && votedFor !== 'none') {
+      if (votedFor === 'skip' || votedFor === 'none') {
+        skippedOrNoneCount += 1;
+      } else {
         voteCounts[votedFor] = (voteCounts[votedFor] || 0) + 1;
       }
     }
 
-    let highestVoteId: string | null = null;
     let highestVoteCount = 0;
-    let isTie = false;
+    
+    // Evaluate maximum votes
+    let candidates: string[] = []; // can contain 'skip'
+
+    if (skippedOrNoneCount > highestVoteCount) {
+        highestVoteCount = skippedOrNoneCount;
+        candidates = ['skip'];
+    } else if (skippedOrNoneCount === highestVoteCount && skippedOrNoneCount > 0) {
+        candidates.push('skip');
+    }
 
     for (const [pid, count] of Object.entries(voteCounts)) {
-      if (count > highestVoteCount) {
-        highestVoteId = pid;
-        highestVoteCount = count;
-        isTie = false;
-      } else if (count === highestVoteCount) {
-        isTie = true;
-      }
+        if (count > highestVoteCount) {
+             highestVoteCount = count;
+             candidates = [pid];
+        } else if (count === highestVoteCount) {
+             candidates.push(pid);
+        }
     }
 
-    const skippedCou = Object.values(votes).filter(v => v === 'skip').length;
-    if (skippedCou >= highestVoteCount) {
-      isTie = true;
+    let elected: string | null = null;
+    if (candidates.length > 0) {
+        // "berabere kalırsa sen karar ver"
+        const randomIndex = Math.floor(Math.random() * candidates.length);
+        elected = candidates[randomIndex];
     }
 
-    if (highestVoteId && !isTie) {
-      const votedPlayer = state.players[highestVoteId];
+    if (elected && elected !== 'skip') {
+      const votedPlayer = state.players[elected];
       if (votedPlayer) {
-        state.meeting.votedOutPlayerId = highestVoteId;
+        state.meeting.votedOutPlayerId = elected;
 
-        // Reward voters who accurately detected the tagger
+        // Eliminate the player who got the most votes
+        votedPlayer.isEliminated = true;
+
         if (votedPlayer.role === 'TAGGER') {
-          votedPlayer.isEliminated = true; // Yes, eliminate tagger on correct vote!
           for (const voterId of Object.keys(votes)) {
-            if (votes[voterId] === highestVoteId && state.players[voterId]) {
+            if (votes[voterId] === elected && state.players[voterId]) {
               state.players[voterId].correctVotes += 1;
               state.players[voterId].score += 80;
             }
           }
-          addRoomSystemMessage(code, `🎉 BÜYÜK BAŞARI! Ebe olan ${votedPlayer.name} oymalayla doğru tahmin edildi! Dedektifler ve Masumlar oyunu kazandı! 🏆`);
-          setTimeout(() => {
-            endRoomGame(code, 'DETECTIVES_WIN_VOTE');
-          }, 3000);
+          addRoomSystemMessage(code, `🎉 BÜYÜK BAŞARI! Ebe olan ${votedPlayer.name} oynamayla doğru tahmin edildi!`);
         } else {
-          // Wrong guess! "bir şey olmasın" - do NOT eliminate!
-          state.bellCooldown = 40; // Lock the bell/guesses for 40 seconds!
-          addRoomSystemMessage(code, `🚨 DIŞARI OYNAMA HATASI! ${votedPlayer.name} oymak istendi ama o EBE değil! Kimse elenmedi fakat Merkez Zili ve Tahminler 40 saniye boyunca kilitlendi! 🔒`);
+          // Wrong guess! Innocent got eliminated
+          addRoomSystemMessage(code, `🚨 DIŞARI OYNAMA HATASI! ${votedPlayer.name} EBE değilmiş! Masum bir oyuncu ebelendi!`);
         }
       }
     } else {
       addRoomSystemMessage(code, 'Kolluk kuvvetleri ve sakinler bu tur pas geçmeye karar verdi. Oyun devam ediyor!');
     }
-
-    // After 4.5 seconds, return to active gameplay (unless Detectives already won)
-    setTimeout(() => {
-      if (state.phase === 'MEETING') {
-        // Direct reset player coordinates to zone
-        const roomsList = [
-          { x: 300, y: 280 },
-          { x: 950, y: 300 },
-          { x: 600, y: 380 },
-          { x: 950, y: 680 },
-          { x: 300, y: 680 }
-        ];
-        let rIndex = 0;
-        for (const player of Object.values(state.players)) {
-          const spawnLoc = roomsList[rIndex % roomsList.length];
-          player.x = spawnLoc.x;
-          player.y = spawnLoc.y;
-          rIndex++;
-        }
-
-        state.phase = 'PLAYING';
-        state.meeting = null;
-        state.traps = []; // Clear current traps after meeting for complete balance
-        saveAndBroadcastRoomState(code);
-      }
-    }, 4500);
 
     saveAndBroadcastRoomState(code);
   }
@@ -795,7 +816,7 @@ async function startServer() {
         state = {
           phase: 'LOBBY',
           players: {},
-          tasks: get10RandomTasks(),
+          tasks: getRandomTasks(1),
           traps: [],
           tagSpots: [],
           meeting: null,
@@ -930,7 +951,7 @@ async function startServer() {
         if (player) {
           player.x = x;
           player.y = y;
-          saveAndBroadcastRoomState(roomCode);
+          roomNeedsSync.add(roomCode);
         }
       }
     });
@@ -1065,13 +1086,8 @@ async function startServer() {
 
             addRoomSystemMessage(roomCode, `📢 EBE BİRİNİ SOBELEDİ! Sinsi ebe (${tagger.name}), ${target.name} arkadaşımızı sobeledi! Ebe dinlenmeye çekildi, 40 saniye boyunca kimseyi sobeleyemez!`);
 
-            const aliveDetectives = Object.values(state.players).filter(
-              p => p.role !== 'TAGGER' && !p.isEliminated && p.isConnected
-            );
-
-            if (aliveDetectives.length === 0) {
-              endRoomGame(roomCode, 'TAGGER_WIN_ELIMINATIONS');
-            } else {
+            const gameEnded = checkWinCondition(roomCode);
+            if (!gameEnded) {
               saveAndBroadcastRoomState(roomCode);
             }
           }
@@ -1160,7 +1176,7 @@ async function startServer() {
             reportedPlayerId,
             votes: {},
             votedOutPlayerId: null,
-            timer: 35,
+            timer: 15,
             isConcluded: false,
             chatMessages: [],
           };
@@ -1207,6 +1223,37 @@ async function startServer() {
           } else {
             saveAndBroadcastRoomState(roomCode);
           }
+        }
+      }
+    });
+
+    socket.on('proceedMeeting', () => {
+      const roomCode = socketToRoom.get(socket.id);
+      if (!roomCode) return;
+      const state = getRoomState(roomCode);
+      if (state && state.phase === 'MEETING' && state.meeting?.isConcluded) {
+        const gameEnded = checkWinCondition(roomCode);
+        if (!gameEnded) {
+          // Direct reset player coordinates to zone
+          const roomsList = [
+            { x: 300, y: 280 },
+            { x: 950, y: 300 },
+            { x: 600, y: 380 },
+            { x: 950, y: 680 },
+            { x: 300, y: 680 }
+          ];
+          let rIndex = 0;
+          for (const player of Object.values(state.players)) {
+            const spawnLoc = roomsList[rIndex % roomsList.length];
+            player.x = spawnLoc.x;
+            player.y = spawnLoc.y;
+            rIndex++;
+          }
+
+          state.phase = 'PLAYING';
+          state.meeting = null;
+          state.traps = []; // Clear current traps after meeting for complete balance
+          saveAndBroadcastRoomState(roomCode);
         }
       }
     });
@@ -1283,13 +1330,13 @@ async function startServer() {
 
           const playersArr = Object.values(state.players);
           if (playersArr.length >= 1) {
-            state.tasks = get10RandomTasks();
+            state.tasks = getRandomTasks(playersArr.length);
             state.taskProgress = 0;
             state.traps = [];
             state.tagSpots = [];
             state.meeting = null;
             state.timer = 240; // 4 minutes
-            state.tagCooldown = 0;
+            state.tagCooldown = 15; // 15 seconds grace period at game start
             state.bellCooldown = 0;
             state.outcome = null;
 
